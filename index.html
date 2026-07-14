@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Design Simulator Pro</title>
+<meta name="description" content="Interactive distributed systems design, simulation, and learning platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sys.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     SPLASH SCREEN
+═══════════════════════════════════════════════ -->
+<div id="splashScreen" class="splash-screen">
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <div class="splash-logo-icon">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="14" fill="url(#splashGrad)"/>
+          <circle cx="24" cy="14" r="4" fill="white" opacity="0.9"/>
+          <circle cx="12" cy="32" r="4" fill="white" opacity="0.9"/>
+          <circle cx="36" cy="32" r="4" fill="white" opacity="0.9"/>
+          <line x1="24" y1="18" x2="12" y2="28" stroke="white" stroke-width="2" opacity="0.7"/>
+          <line x1="24" y1="18" x2="36" y2="28" stroke="white" stroke-width="2" opacity="0.7"/>
+          <line x1="16" y1="32" x2="32" y2="32" stroke="white" stroke-width="2" opacity="0.5"/>
+          <defs>
+            <linearGradient id="splashGrad" x1="0" y1="0" x2="48" y2="48">
+              <stop offset="0%" stop-color="#6366F1"/>
+              <stop offset="100%" stop-color="#8B5CF6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="splash-logo-text">
+        <span class="splash-name">SystemDesign</span>
+        <span class="splash-pro">Simulator Pro</span>
+      </div>
+    </div>
+    <div class="splash-tagline">Design · Simulate · Master</div>
+    <div class="splash-bar-wrap">
+      <div class="splash-bar"><div class="splash-bar-fill" id="splashBarFill"></div></div>
+    </div>
+    <div class="splash-status" id="splashStatus">Initializing platform…</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     MAIN APP
+═══════════════════════════════════════════════ -->
+<div id="appShell" class="app-shell" style="display:none">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="14" fill="url(#brandGrad)"/>
+          <circle cx="24" cy="14" r="4" fill="white" opacity="0.9"/>
+          <circle cx="12" cy="32" r="4" fill="white" opacity="0.9"/>
+          <circle cx="36" cy="32" r="4" fill="white" opacity="0.9"/>
+          <line x1="24" y1="18" x2="12" y2="28" stroke="white" stroke-width="2" opacity="0.7"/>
+          <line x1="24" y1="18" x2="36" y2="28" stroke="white" stroke-width="2" opacity="0.7"/>
+          <defs>
+            <linearGradient id="brandGrad" x1="0" y1="0" x2="48" y2="48">
+              <stop offset="0%" stop-color="#6366F1"/>
+              <stop offset="100%" stop-color="#8B5CF6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">SDS<strong>Pro</strong></span>
+      </div>
+      <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" aria-label="Collapse sidebar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <div class="nav-group">
+        <button class="nav-item active" data-view="dashboard">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Dashboard</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Design</div>
+        <button class="nav-item" data-view="builder">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M17 13v8M13 17h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Architecture Builder</span>
+        </button>
+        <button class="nav-item" data-view="templates">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M4 4h16v4H4zM4 12h8v8H4zM16 12h4v3M16 19h4M18 12v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Templates</span>
+          <span class="nav-badge">20</span>
+        </button>
+        <button class="nav-item" data-view="whiteboard">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <rect x="3" y="3" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M7 10l3-3 3 3 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Whiteboard</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Simulate</div>
+        <button class="nav-item" data-view="simulator">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <polygon points="5,3 19,12 5,21" fill="currentColor" opacity="0.8"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Simulators</span>
+        </button>
+        <button class="nav-item" data-view="traffic">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Traffic Generator</span>
+        </button>
+        <button class="nav-item" data-view="failures">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Failure Simulator</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Learn</div>
+        <button class="nav-item" data-view="learning">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Learning Hub</span>
+        </button>
+        <button class="nav-item" data-view="interview">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Interview Mode</span>
+        </button>
+        <button class="nav-item" data-view="comparison">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Comparisons</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Analyze</div>
+        <button class="nav-item" data-view="analytics">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M18 9l-5 5-3-3-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Analytics</span>
+        </button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-group-label">Workspace</div>
+        <button class="nav-item" data-view="projects">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Projects</span>
+          <span class="nav-badge" id="projectsBadge">0</span>
+        </button>
+        <button class="nav-item" data-view="settings">
+          <span class="nav-item-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.8"/>
+            </svg>
+          </span>
+          <span class="nav-item-label">Settings</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="xp-display" id="sidebarXP">
+        <div class="xp-icon">⚡</div>
+        <div class="xp-info">
+          <div class="xp-label">Total XP</div>
+          <div class="xp-value" id="sidebarXPValue">0</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile backdrop -->
+  <div class="sidebar-mobile-backdrop" id="sidebarMobileBackdrop"></div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <div class="main-content" id="mainContent">
+
+    <!-- ═══ TOPBAR ═══ -->
+    <header class="topbar" id="topbar">
+      <button class="topbar-hamburger" id="hamburgerBtn" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="topbar-search-wrap" id="topbarSearchWrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" class="topbar-search-icon">
+          <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="topbarSearchInput" class="topbar-search-input"
+          placeholder="Search templates, topics, concepts… (Ctrl+K)" autocomplete="off" readonly>
+        <kbd class="topbar-search-kbd">Ctrl+K</kbd>
+      </div>
+
+      <!-- Live sim status strip -->
+      <div class="sim-status-strip" id="simStatusStrip">
+        <div class="sss-item">
+          <span class="sss-dot sss-dot--idle" id="simStatusDot"></span>
+          <span class="sss-label" id="simStatusLabel">Idle</span>
+        </div>
+        <div class="sss-sep"></div>
+        <div class="sss-item">
+          <span class="sss-key">Projects</span>
+          <span class="sss-val" id="sssProjects">0</span>
+        </div>
+        <div class="sss-sep"></div>
+        <div class="sss-item">
+          <span class="sss-key">Simulations</span>
+          <span class="sss-val" id="sssSimulations">0</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="streak-chip" id="streakChip" title="Learning streak">
+          <span>🔥</span><span id="streakVal">0</span>
+        </div>
+        <button class="topbar-icon-btn" id="notifBtn" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span class="topbar-icon-btn-dot" id="notifDot" style="display:none"></span>
+        </button>
+        <button class="topbar-icon-btn" id="themeBtn" aria-label="Toggle theme">
+          <svg id="themeSunIcon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <svg id="themeMoonIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="topbar-new-btn" id="newProjectBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          New Design
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══ VIEWS ═══ -->
+    <main class="views-container" id="viewsContainer">
+
+      <!-- ══════════════════════════════
+           DASHBOARD VIEW
+      ══════════════════════════════ -->
+      <section class="view active" id="view-dashboard" data-view="dashboard">
+        <div class="view-scroll">
+          <div class="view-inner">
+
+            <!-- Hero -->
+            <div class="dash-hero">
+              <div class="dash-hero-text">
+                <h1 class="dash-hero-title" id="dashHeroTitle">Welcome to SDS Pro</h1>
+                <p class="dash-hero-sub">Design distributed systems, simulate traffic, master system design.</p>
+              </div>
+              <div class="dash-hero-actions">
+                <button class="btn btn-primary" id="dashNewDesignBtn">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  New Architecture
+                </button>
+                <button class="btn btn-outline" data-view="templates">Browse Templates</button>
+              </div>
+            </div>
+
+            <!-- Stat cards -->
+            <div class="dash-stats-grid" id="dashStatsGrid">
+              <div class="stat-card stat-card--indigo">
+                <div class="stat-card-header">
+                  <span class="stat-card-icon">🏗️</span>
+                  <span class="stat-card-trend stat-card-trend--up" id="trendProjects">+0</span>
+                </div>
+                <div class="stat-card-value" id="statProjects">0</div>
+                <div class="stat-card-label">Architectures Built</div>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill" id="barProjects" style="width:0%"></div></div>
+              </div>
+              <div class="stat-card stat-card--violet">
+                <div class="stat-card-header">
+                  <span class="stat-card-icon">▶️</span>
+                  <span class="stat-card-trend stat-card-trend--up" id="trendSims">+0</span>
+                </div>
+                <div class="stat-card-value" id="statSims">0</div>
+                <div class="stat-card-label">Simulations Run</div>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill stat-card-bar-fill--violet" id="barSims" style="width:0%"></div></div>
+              </div>
+              <div class="stat-card stat-card--emerald">
+                <div class="stat-card-header">
+                  <span class="stat-card-icon">📚</span>
+                  <span class="stat-card-trend stat-card-trend--up" id="trendLearn">+0</span>
+                </div>
+                <div class="stat-card-value" id="statLearn">0%</div>
+                <div class="stat-card-label">Learning Progress</div>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill stat-card-bar-fill--emerald" id="barLearn" style="width:0%"></div></div>
+              </div>
+              <div class="stat-card stat-card--amber">
+                <div class="stat-card-header">
+                  <span class="stat-card-icon">⚡</span>
+                  <span class="stat-card-trend stat-card-trend--up" id="trendXP">+0</span>
+                </div>
+                <div class="stat-card-value" id="statXP">0</div>
+                <div class="stat-card-label">Total XP Earned</div>
+                <div class="stat-card-bar"><div class="stat-card-bar-fill stat-card-bar-fill--amber" id="barXP" style="width:0%"></div></div>
+              </div>
+            </div>
+
+            <!-- Main grid -->
+            <div class="dash-main-grid">
+
+              <!-- Quick Actions -->
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Quick Actions</h2>
+                </div>
+                <div class="quick-actions-grid" id="quickActionsGrid">
+                  <button class="quick-action-card" data-view="builder">
+                    <div class="qac-icon">🏗️</div>
+                    <div class="qac-label">Build Architecture</div>
+                    <div class="qac-sub">Drag & drop designer</div>
+                  </button>
+                  <button class="quick-action-card" data-view="simulator">
+                    <div class="qac-icon">▶️</div>
+                    <div class="qac-label">Run Simulation</div>
+                    <div class="qac-sub">Animate request flows</div>
+                  </button>
+                  <button class="quick-action-card" data-view="templates">
+                    <div class="qac-icon">📐</div>
+                    <div class="qac-label">Load Template</div>
+                    <div class="qac-sub">Netflix, Uber, AWS…</div>
+                  </button>
+                  <button class="quick-action-card" data-view="learning">
+                    <div class="qac-icon">📚</div>
+                    <div class="qac-label">Start Learning</div>
+                    <div class="qac-sub">CAP, Sharding, LB…</div>
+                  </button>
+                  <button class="quick-action-card" data-view="interview">
+                    <div class="qac-icon">🎯</div>
+                    <div class="qac-label">Interview Mode</div>
+                    <div class="qac-sub">Design challenges</div>
+                  </button>
+                  <button class="quick-action-card" data-view="comparison">
+                    <div class="qac-icon">⚖️</div>
+                    <div class="qac-label">Compare Patterns</div>
+                    <div class="qac-sub">SQL vs NoSQL, etc.</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Recent Projects -->
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Recent Projects</h2>
+                  <button class="panel-link-btn" data-view="projects">View all</button>
+                </div>
+                <div class="recent-projects-list" id="recentProjectsList">
+                  <div class="empty-state" id="recentProjectsEmpty">
+                    <div class="empty-state-icon">🏗️</div>
+                    <p>No projects yet</p>
+                    <span>Create your first architecture to get started</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Architecture templates featured -->
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Featured Templates</h2>
+                  <button class="panel-link-btn" data-view="templates">All 20</button>
+                </div>
+                <div class="featured-templates-list" id="featuredTemplatesList"></div>
+              </div>
+
+              <!-- Learning progress -->
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Learning Progress</h2>
+                  <button class="panel-link-btn" data-view="learning">Continue</button>
+                </div>
+                <div class="learning-progress-list" id="learningProgressList"></div>
+              </div>
+
+              <!-- Activity timeline -->
+              <div class="dash-panel dash-panel--wide">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Activity (last 30 days)</h2>
+                </div>
+                <div class="activity-heatmap" id="activityHeatmap"></div>
+              </div>
+
+              <!-- Achievements -->
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title">Achievements</h2>
+                </div>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+              </div>
+
+            </div><!-- /dash-main-grid -->
+          </div><!-- /view-inner -->
+        </div><!-- /view-scroll -->
+      </section>
+
+      <!-- ══════════════════════════════
+           BUILDER VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-builder" data-view="builder">
+        <div class="builder-shell">
+          <!-- Component Palette -->
+          <div class="builder-palette" id="builderPalette">
+            <div class="palette-header">
+              <input type="text" class="palette-search" id="paletteSearch" placeholder="Search components…">
+            </div>
+            <div class="palette-body" id="paletteBody"></div>
+          </div>
+          <!-- Canvas -->
+          <div class="builder-canvas-wrap" id="builderCanvasWrap">
+            <div class="builder-toolbar">
+              <div class="builder-toolbar-left">
+                <button class="builder-tool-btn active" id="toolSelect" title="Select (V)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 3l14 9-7 1-3 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <button class="builder-tool-btn" id="toolConnect" title="Connect (C)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="18" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 12h6" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+                <button class="builder-tool-btn" id="toolDelete" title="Delete selected (Del)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M19 6l-1 14H6L5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="toolbar-sep"></div>
+                <button class="builder-tool-btn" id="toolUndo" title="Undo (Ctrl+Z)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 7v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 13A9 9 0 1021 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <button class="builder-tool-btn" id="toolRedo" title="Redo (Ctrl+Y)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 7v6h-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M21 13A9 9 0 113 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <div class="toolbar-sep"></div>
+                <button class="builder-tool-btn" id="toolZoomIn" title="Zoom in (+)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                    <path d="M21 21l-4.3-4.3M8 11h6M11 8v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <button class="builder-tool-btn" id="toolZoomOut" title="Zoom out (-)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                    <path d="M21 21l-4.3-4.3M8 11h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <button class="builder-tool-btn" id="toolFitView" title="Fit to view (F)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
+                <span class="zoom-label" id="zoomLabel">100%</span>
+              </div>
+              <div class="builder-toolbar-right">
+                <div class="grid-toggle-wrap">
+                  <label class="toggle-label">Grid</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="gridToggle" checked>
+                    <span class="toggle-knob"></span>
+                  </label>
+                </div>
+                <button class="btn btn-sm btn-outline" id="saveDesignBtn">Save</button>
+                <button class="btn btn-sm btn-primary" id="runSimBtn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <polygon points="5,3 19,12 5,21" fill="currentColor"/>
+                  </svg>
+                  Simulate
+                </button>
+              </div>
+            </div>
+            <div class="builder-canvas-container" id="builderCanvasContainer">
+              <svg class="builder-svg" id="builderSVG" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <pattern id="gridPattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--grid-color)" stroke-width="0.5"/>
+                  </pattern>
+                  <marker id="arrowMarker" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="var(--connection-color)"/>
+                  </marker>
+                  <marker id="arrowMarkerHighlight" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" fill="var(--accent)"/>
+                  </marker>
+                </defs>
+                <rect id="gridBg" width="100%" height="100%" fill="url(#gridPattern)"/>
+                <g id="connectionsLayer"></g>
+                <g id="componentsLayer"></g>
+              </svg>
+              <div class="canvas-empty-hint" id="canvasEmptyHint">
+                <div class="ceh-icon">🏗️</div>
+                <div class="ceh-title">Start building your architecture</div>
+                <div class="ceh-sub">Drag components from the left panel, or load a template</div>
+                <button class="btn btn-outline btn-sm" data-view="templates">Browse Templates</button>
+              </div>
+            </div>
+            <!-- Properties panel (right) -->
+            <div class="builder-props-panel" id="builderPropsPanel" style="display:none">
+              <div class="props-panel-header">
+                <h3 class="props-panel-title" id="propsPanelTitle">Properties</h3>
+                <button class="props-close-btn" id="propsPanelClose">×</button>
+              </div>
+              <div class="props-panel-body" id="propsPanelBody"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           SIMULATOR VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-simulator" data-view="simulator">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">System Simulators</h1>
+            <p class="view-sub">Visualize how distributed systems behave under real conditions.</p>
+            <div class="simulators-grid" id="simulatorsGrid"></div>
+            <!-- Active sim panel -->
+            <div class="sim-active-panel" id="simActivePanel" style="display:none">
+              <div class="sim-panel-header">
+                <h2 class="sim-panel-title" id="simPanelTitle">Simulator</h2>
+                <button class="btn btn-sm btn-outline" id="simCloseBtn">Close</button>
+              </div>
+              <div class="sim-panel-body" id="simPanelBody"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           TRAFFIC VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-traffic" data-view="traffic">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Traffic Generator</h1>
+            <p class="view-sub">Simulate real-world traffic patterns and observe system behavior.</p>
+            <div class="traffic-layout" id="trafficLayout">
+              <div class="traffic-config-panel">
+                <div class="dash-panel">
+                  <div class="dash-panel-header"><h2 class="dash-panel-title">Configure Traffic</h2></div>
+                  <div class="traffic-config-body" id="trafficConfigBody"></div>
+                </div>
+              </div>
+              <div class="traffic-viz-panel">
+                <div class="dash-panel">
+                  <div class="dash-panel-header">
+                    <h2 class="dash-panel-title">Live Traffic Visualization</h2>
+                    <div id="trafficStatusChip" class="status-chip status-chip--idle">Idle</div>
+                  </div>
+                  <canvas id="trafficCanvas" class="traffic-canvas"></canvas>
+                  <div class="traffic-metrics-row" id="trafficMetricsRow"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           FAILURES VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-failures" data-view="failures">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Failure Simulator</h1>
+            <p class="view-sub">Trigger failures, observe recovery, and understand resilience patterns.</p>
+            <div class="failures-grid" id="failuresGrid"></div>
+            <div class="failure-scenario-panel" id="failureScenarioPanel" style="display:none">
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title" id="failureScenarioTitle">Scenario</h2>
+                  <button class="btn btn-sm btn-outline" id="failureScenarioClose">Close</button>
+                </div>
+                <canvas id="failureCanvas" class="failure-canvas"></canvas>
+                <div class="failure-log" id="failureLog"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           TEMPLATES VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-templates" data-view="templates">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <div class="templates-header">
+              <h1 class="view-title">Architecture Templates</h1>
+              <div class="templates-filters" id="templatesFilters"></div>
+            </div>
+            <div class="templates-grid" id="templatesGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           WHITEBOARD VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-whiteboard" data-view="whiteboard">
+        <div class="whiteboard-shell">
+          <div class="whiteboard-toolbar" id="whiteboardToolbar"></div>
+          <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           LEARNING VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-learning" data-view="learning">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Learning Hub</h1>
+            <p class="view-sub">Master distributed systems concepts with interactive lessons.</p>
+            <div class="learning-layout">
+              <div class="learning-topics-sidebar" id="learningTopicsSidebar"></div>
+              <div class="learning-content-panel" id="learningContentPanel">
+                <div class="learning-content-empty" id="learningContentEmpty">
+                  <div class="empty-state-icon">📚</div>
+                  <p>Select a topic to start learning</p>
+                </div>
+                <div id="learningContentBody" style="display:none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           INTERVIEW VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-interview" data-view="interview">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Interview Mode</h1>
+            <p class="view-sub">Practice system design interviews with real challenges and evaluation.</p>
+            <div class="interview-layout" id="interviewLayout"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           COMPARISON VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-comparison" data-view="comparison">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Architecture Comparisons</h1>
+            <p class="view-sub">Side-by-side visual comparisons of architectural patterns and technologies.</p>
+            <div class="comparisons-grid" id="comparisonsGrid"></div>
+            <div class="comparison-detail" id="comparisonDetail" style="display:none">
+              <div class="dash-panel">
+                <div class="dash-panel-header">
+                  <h2 class="dash-panel-title" id="comparisonDetailTitle">Comparison</h2>
+                  <button class="btn btn-sm btn-outline" id="comparisonDetailClose">Close</button>
+                </div>
+                <div id="comparisonDetailBody"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           ANALYTICS VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-analytics" data-view="analytics">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Performance Analytics</h1>
+            <p class="view-sub">Metrics and charts from your simulations and designs.</p>
+            <div class="analytics-grid" id="analyticsGrid">
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Latency Distribution</h2></div>
+                <canvas id="chartLatency" width="400" height="220"></canvas>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Throughput Over Time</h2></div>
+                <canvas id="chartThroughput" width="400" height="220"></canvas>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Error Rate</h2></div>
+                <canvas id="chartErrors" width="400" height="220"></canvas>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Cache Hit Rate</h2></div>
+                <canvas id="chartCache" width="400" height="220"></canvas>
+              </div>
+              <div class="dash-panel dash-panel--wide">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">System Resource Usage</h2></div>
+                <canvas id="chartResources" width="800" height="200"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           PROJECTS VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-projects" data-view="projects">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <div class="projects-header">
+              <h1 class="view-title">My Projects</h1>
+              <button class="btn btn-primary" id="newProjectFromProjBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+                New Project
+              </button>
+            </div>
+            <div class="projects-grid" id="projectsGrid">
+              <div class="empty-state" id="projectsEmpty">
+                <div class="empty-state-icon">📁</div>
+                <p>No projects yet</p>
+                <span>Create your first architecture design</span>
+                <button class="btn btn-primary btn-sm" id="projectsEmptyNewBtn">Create Project</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════
+           SETTINGS VIEW
+      ══════════════════════════════ -->
+      <section class="view" id="view-settings" data-view="settings">
+        <div class="view-scroll">
+          <div class="view-inner">
+            <h1 class="view-title">Settings</h1>
+            <div class="settings-layout">
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Appearance</h2></div>
+                <div class="settings-row">
+                  <div class="settings-row-info"><span class="sr-title">Theme</span><span class="sr-sub">Choose platform theme</span></div>
+                  <div class="theme-pill-group" id="themePillGroup">
+                    <button class="theme-pill" data-theme="dark">Dark</button>
+                    <button class="theme-pill" data-theme="light">Light</button>
+                    <button class="theme-pill" data-theme="auto">Auto</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-info"><span class="sr-title">Grid</span><span class="sr-sub">Show grid in builder</span></div>
+                  <label class="toggle-switch"><input type="checkbox" id="settingsGridToggle" checked><span class="toggle-knob"></span></label>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-info"><span class="sr-title">Animations</span><span class="sr-sub">Enable motion effects</span></div>
+                  <label class="toggle-switch"><input type="checkbox" id="settingsAnimToggle" checked><span class="toggle-knob"></span></label>
+                </div>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Simulation</h2></div>
+                <div class="settings-row">
+                  <div class="settings-row-info"><span class="sr-title">Sim Speed</span><span class="sr-sub">Animation playback speed</span></div>
+                  <select class="settings-select" id="simSpeedSelect">
+                    <option value="0.5">0.5× Slow</option>
+                    <option value="1" selected>1× Normal</option>
+                    <option value="2">2× Fast</option>
+                    <option value="4">4× Ultra</option>
+                  </select>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-info"><span class="sr-title">Packet Count</span><span class="sr-sub">Visible packets per sim</span></div>
+                  <select class="settings-select" id="packetCountSelect">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Data</h2></div>
+                <p class="settings-desc">All data is stored locally in this browser. Export regularly.</p>
+                <div class="settings-btn-row">
+                  <button class="btn btn-outline" id="exportDataBtn">Export (.json)</button>
+                  <label class="btn btn-outline" for="importDataInput">Import</label>
+                  <input type="file" id="importDataInput" accept="application/json" style="display:none">
+                  <button class="btn btn-danger-outline" id="resetDataBtn">Reset All</button>
+                </div>
+                <div class="storage-info" id="settingsStorageInfo"></div>
+              </div>
+              <div class="dash-panel">
+                <div class="dash-panel-header"><h2 class="dash-panel-title">Keyboard Shortcuts</h2></div>
+                <div class="shortcuts-list">
+                  <div class="shortcut-row"><kbd>Ctrl+K</kbd><span>Open command palette</span></div>
+                  <div class="shortcut-row"><kbd>Ctrl+N</kbd><span>New project</span></div>
+                  <div class="shortcut-row"><kbd>Ctrl+S</kbd><span>Save current design</span></div>
+                  <div class="shortcut-row"><kbd>Ctrl+Z</kbd><span>Undo</span></div>
+                  <div class="shortcut-row"><kbd>Ctrl+Y</kbd><span>Redo</span></div>
+                  <div class="shortcut-row"><kbd>Del</kbd><span>Delete selected</span></div>
+                  <div class="shortcut-row"><kbd>F</kbd><span>Fit view to canvas</span></div>
+                  <div class="shortcut-row"><kbd>+/-</kbd><span>Zoom in/out</span></div>
+                  <div class="shortcut-row"><kbd>Space</kbd><span>Pan mode</span></div>
+                  <div class="shortcut-row"><kbd>Esc</kbd><span>Close overlays</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /views-container -->
+  </div><!-- /main-content -->
+</div><!-- /appShell -->
+
+<!-- ═══════════════════════════════════════════════
+     OVERLAYS (all display:none by default via CSS)
+═══════════════════════════════════════════════ -->
+
+<!-- Command Palette -->
+<div class="cmd-overlay" id="cmdOverlay">
+  <div class="cmd-palette" id="cmdPalette">
+    <div class="cmd-search-row">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="cmd-search-icon">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="cmdInput" class="cmd-input" placeholder="Search views, templates, actions, concepts…" autocomplete="off">
+      <kbd class="cmd-esc-kbd">Esc</kbd>
+    </div>
+    <div class="cmd-results" id="cmdResults"></div>
+    <div class="cmd-footer">
+      <span><kbd>↑↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> select</span>
+      <span><kbd>Esc</kbd> close</span>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Drawer -->
+<div class="notif-drawer" id="notifDrawer">
+  <div class="notif-drawer-header">
+    <h3>Notifications</h3>
+    <button class="link-btn" id="clearNotifsBtn">Clear all</button>
+  </div>
+  <div class="notif-drawer-body" id="notifDrawerBody">
+    <div class="notif-empty" id="notifEmpty">No notifications</div>
+  </div>
+</div>
+
+<!-- Achievement Popup -->
+<div class="achievement-popup" id="achievementPopup">
+  <div class="ach-popup-icon" id="achPopupIcon">🏆</div>
+  <div class="ach-popup-text">
+    <div class="ach-popup-headline">Achievement Unlocked!</div>
+    <div class="ach-popup-name" id="achPopupName"></div>
+  </div>
+</div>
+
+<!-- Global Search Overlay -->
+<div class="global-search-overlay" id="globalSearchOverlay">
+  <div class="global-search-box">
+    <div class="gs-input-row">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <input type="text" id="gsInput" class="gs-input" placeholder="Search everything…" autocomplete="off">
+      <button class="link-btn" id="gsCloseBtn">Close</button>
+    </div>
+    <div class="gs-results" id="gsResults"></div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h3 class="modal-title" id="modalTitle">Confirm</h3>
+    <p class="modal-body-text" id="modalBodyText"></p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="modalCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="modalConfirmBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script src="sys.js"></script>
+</body>
+</html>
